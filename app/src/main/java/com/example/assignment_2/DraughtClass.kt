@@ -15,41 +15,147 @@ class DraughtClass {
     fun movePiece(fromCol: Int, fromRow:Int, toCol:Int, toRow:Int){
         if(!correctMove(fromRow, fromCol, toRow, toCol)) return
         var movingPiece = pieceAt(fromCol, fromRow) ?: return
-        var draughtPiece = pieceAt(toCol, toRow)?.let {
+        var offRow = 0
+        var offCol=  0
+        var tempObject: DraughtPiece? =null
+        var nextTempObject: DraughtPiece? = null
+        var draughtPiece = pieceAt(toCol, toRow)?.let { it ->
 
             if (it.player == movingPiece.player) {
                 return
             }
+            if(it.row >  movingPiece.row){
+                return
+            }
+
+            if(fromRow > toRow && fromCol < toCol) {
+                tempObject =  pieceAt(movingPiece.col +2, movingPiece.row-2)
+                offRow=-1
+                offCol=1
+            }
+            else if(fromRow > toRow && fromCol > toCol){
+                tempObject =  pieceAt(movingPiece.col -2, movingPiece.row-2)
+                offRow=-1
+                offCol=-1
+            }
+
+            if( tempObject !=null) return
+
             pieceBox.remove(it)
         }
 
         pieceBox.remove(movingPiece)
-        pieceBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId))
+        if (pieceAt(toCol+offCol+offCol, toRow+offRow+offRow)!=null && toCol+offCol+offCol>0 && toRow+offRow+offRow<8){
+            pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.player, movingPiece.resId))
+            futureMove(toCol+offCol, toRow+offRow, toCol+offCol+offCol, toRow+offRow+offRow)
+        }
+        else{
+            pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.player, movingPiece.resId))
+        }
 
     }
 
     fun moveBlackPiece(fromCol: Int, fromRow:Int, toCol:Int, toRow:Int){
         if(!correctBlackMove(fromRow, fromCol, toRow, toCol)) return
+        var offRow = 0
+        var offCol=  0
+        var tempObject: DraughtPiece? =null
         var movingPiece = pieceAt(fromCol, fromRow) ?: return
         var draughtPiece = pieceAt(toCol, toRow)?.let {
 
             if (it.player == movingPiece.player) {
                 return
             }
+
+            if(it.row <  movingPiece.row){
+                return
+            }
+            if(fromRow < toRow && fromCol < toCol) {
+                tempObject =  pieceAt(movingPiece.col +2, movingPiece.row+2)
+                offRow=1
+                offCol=1
+            }
+            else if(fromRow < toRow && fromCol > toCol){
+                tempObject =  pieceAt(movingPiece.col -2, movingPiece.row+2)
+                offRow=1
+                offCol=-1
+            }
+
+            if( tempObject !=null) return
             pieceBox.remove(it)
         }
         pieceBox.remove(movingPiece)
-        pieceBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId))
+
+        if (pieceAt(toCol+offCol+offCol, toRow+offRow+offRow)!=null
+            && toCol+offCol+offCol>0 && toCol+offCol+offCol<6
+            && toRow+offRow+offRow>0 && toRow+offRow+offRow<6){
+            pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.player, movingPiece.resId))
+            futureBlackMove(toCol+offCol, toRow+offRow, toCol+offCol+offCol, toRow+offRow+offRow)
+        }
+        else{
+            pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.player, movingPiece.resId))
+        }
+
+
     }
 
-    private fun partnerCheck(toCol: Int, toRow: Int, movingPiece: DraughtPiece) {
+    private fun futureMove(fromCol: Int, fromRow:Int, toCol:Int, toRow:Int) {
+        var movingPiece = pieceAt(fromCol, fromRow) ?: return
+        var offRow = 0
+        var offCol=  0
+        var tempObject: DraughtPiece? =null
         var draughtPiece = pieceAt(toCol, toRow)?.let {
-            if (it.player == movingPiece.player) {
-                return
+
+            if(fromCol > toCol) {
+                tempObject =  pieceAt(movingPiece.col -2, movingPiece.row-2)
+                offRow=-1
+                offCol=-1
             }
+            else if(fromCol < toCol){
+                tempObject =  pieceAt(movingPiece.col +2, movingPiece.row-2)
+                offRow=-1
+                offCol=1
+            }
+
+
+            if( tempObject !=null ) return
             pieceBox.remove(it)
         }
+        pieceBox.remove(movingPiece)
+
+        pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.player, movingPiece.resId))
+
     }
+
+    private fun futureBlackMove(fromCol: Int, fromRow:Int, toCol:Int, toRow:Int) {
+        var movingPiece = pieceAt(fromCol, fromRow) ?: return
+        var offRow = 0
+        var offCol=  0
+        var tempObject: DraughtPiece? =null
+        var draughtPiece = pieceAt(toCol, toRow)?.let {
+
+            if(fromCol < toCol) {
+                tempObject =  pieceAt(movingPiece.col +2, movingPiece.row+2)
+                offRow=1
+                offCol=1
+            }
+            else if(fromCol > toCol){
+                tempObject =  pieceAt(movingPiece.col -2, movingPiece.row+2)
+                offRow=1
+                offCol=-1
+            }
+
+            if( tempObject !=null ) return
+            pieceBox.remove(it)
+        }
+        pieceBox.remove(movingPiece)
+
+        pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.player, movingPiece.resId))
+
+
+    }
+
+
 
     private fun correctMove(fromRow:Int, fromCol:Int, toRow:Int, toCol:Int): Boolean {
         var offSetRow = fromRow-toRow

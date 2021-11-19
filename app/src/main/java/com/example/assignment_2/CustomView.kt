@@ -149,12 +149,13 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
     }
 
     private fun gameController(fromCol: Int, fromRow: Int, col: Int, row: Int) {
-        if(playerOneCounter){
+        var tempPiece = draughtService?.pieceAt(fromCol, fromRow)
+        if(playerOneCounter && findPlayer(fromCol, fromRow)==0){
             draughtService?.moveBlackPiece(fromCol, fromRow, col, row)
             playerTwoCounter=true
             playerOneCounter=false
         }
-        else if (playerTwoCounter){
+        else if (playerTwoCounter && findPlayer(fromCol, fromRow)==1){
             draughtService?.movePiece(fromCol, fromRow, col, row)
             playerTwoCounter=false
             playerOneCounter=true
@@ -169,7 +170,6 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
             return 0
         }
         return 1
-
     }
 
 
