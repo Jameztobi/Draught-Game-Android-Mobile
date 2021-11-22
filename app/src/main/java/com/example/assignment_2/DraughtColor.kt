@@ -1,6 +1,6 @@
 package com.example.assignment_2
 
-enum class DraughtPlayer {
+enum class DraughtColor {
     RED,
     BLACK
 }
