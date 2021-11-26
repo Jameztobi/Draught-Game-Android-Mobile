@@ -2,7 +2,7 @@ package com.example.assignment_2
 
 import android.util.Log
 
-class DraughtClass {
+class DraughtModel {
 
     var pieceBox = mutableSetOf<DraughtPiece>()
     var myBox = ArrayList<DraughtPiece>()
@@ -23,7 +23,7 @@ class DraughtClass {
         var offCol=  0
         var tempObject: DraughtPiece? =null
         var draughtPiece = pieceAt(toCol, toRow)?.let { it ->
-            if (it.color == movingPiece.color) {
+            if (it.player == movingPiece.player) {
                 return false
             }
             if(it.row >  movingPiece.row){
@@ -43,13 +43,13 @@ class DraughtClass {
             pieceBox.remove(it)
         }
         pieceBox.remove(movingPiece)
-        var mainPiece = DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.normal)
+        var mainPiece = DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.player, movingPiece.resId, DraughtRank.NORMAL)
         if(pieceAt(mainPiece.col, mainPiece.row)==null){
             getTypePlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
         }
 
-        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.color!=DraughtColor.RED){
+        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.player!=DraughtPlayers.PLAYER2){
             getTypePlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
 
@@ -67,7 +67,7 @@ class DraughtClass {
         var movingPiece = pieceAt(fromCol, fromRow) ?: return false
         var draughtPiece = pieceAt(toCol, toRow)?.let {
 
-            if (it.color == movingPiece.color) {
+            if (it.player == movingPiece.player) {
                 return false
             }
 
@@ -89,13 +89,13 @@ class DraughtClass {
         }
         pieceBox.remove(movingPiece)
 
-        var mainPiece = DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.normal)
+        var mainPiece = DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.player, movingPiece.resId, DraughtRank.NORMAL)
         if(pieceAt(mainPiece.col, mainPiece.row)==null){
             getBlackPlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
         }
 
-        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.color!=DraughtColor.RED){
+        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.player!=DraughtPlayers.PLAYER2){
             getBlackPlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
         }
@@ -107,7 +107,7 @@ class DraughtClass {
     private fun checkForFutureMove(movingPiece: DraughtPiece):Boolean{
         when {
             pieceAt(movingPiece.col+1, movingPiece.row-1)!=null &&
-                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.color!=DraughtColor.RED
+                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.player!=DraughtPlayers.PLAYER2
                     &&
                     movingPiece.col+1<=6
             -> {
@@ -120,7 +120,7 @@ class DraughtClass {
             }
             pieceAt(movingPiece.col-1, movingPiece.row-1)!=null
                     &&
-                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.color!=DraughtColor.RED
+                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.player!=DraughtPlayers.PLAYER2
                     &&
                     movingPiece.col-1<=6
                      -> {
@@ -145,7 +145,7 @@ class DraughtClass {
         when {
             pieceAt(movingPiece.col+1, movingPiece.row+1)!=null
                     &&
-                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.color!=DraughtColor.BLACK
+                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.player!=DraughtPlayers.PLAYER1
                     &&
                     movingPiece.col+1<=6
             -> {
@@ -158,7 +158,7 @@ class DraughtClass {
             }
             pieceAt(movingPiece.col-1, movingPiece.row+1)!=null
                     &&
-                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.color!=DraughtColor.BLACK
+                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.player!=DraughtPlayers.PLAYER1
                     &&
                     movingPiece.col-1<=6
             -> {
@@ -181,9 +181,9 @@ class DraughtClass {
         when{
             pieceAt(movingPiece.col+1, movingPiece.row+1)!=null
                     &&
-                    movingPiece.draughtRank==DraughtRank.king
+                    movingPiece.draughtRank==DraughtRank.KING
                     &&
-                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.color!=DraughtColor.RED
+                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.player!=DraughtPlayers.PLAYER2
                     &&
                     movingPiece.col+1<=6
             -> {
@@ -196,9 +196,9 @@ class DraughtClass {
             }
             pieceAt(movingPiece.col-1, movingPiece.row+1)!=null
                     &&
-                    movingPiece.draughtRank==DraughtRank.king
+                    movingPiece.draughtRank==DraughtRank.KING
                     &&
-                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.color!=DraughtColor.RED
+                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.player!=DraughtPlayers.PLAYER2
                     &&
                     movingPiece.col-1<=6
             -> {
@@ -210,7 +210,7 @@ class DraughtClass {
                 return true
             }
             pieceAt(movingPiece.col+1, movingPiece.row-1)!=null &&
-                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.color!=DraughtColor.RED
+                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.player!=DraughtPlayers.PLAYER2
                     &&
                     movingPiece.col+1<=6
             -> {
@@ -223,7 +223,7 @@ class DraughtClass {
             }
             pieceAt(movingPiece.col-1, movingPiece.row-1)!=null
                     &&
-                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.color!=DraughtColor.RED
+                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.player!=DraughtPlayers.PLAYER2
                     &&
                     movingPiece.col-1<=6
             -> {
@@ -245,9 +245,9 @@ class DraughtClass {
     private fun checkForBlackKingFutureMove(movingPiece: DraughtPiece):Boolean{
         when{
             pieceAt(movingPiece.col+1, movingPiece.row-1)!=null &&
-                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.color!=DraughtColor.BLACK
+                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.player!=DraughtPlayers.PLAYER1
                     &&
-                    movingPiece.draughtRank==DraughtRank.king
+                    movingPiece.draughtRank==DraughtRank.KING
                     &&
                     movingPiece.col+1<=6
             -> {
@@ -260,9 +260,9 @@ class DraughtClass {
             }
             pieceAt(movingPiece.col-1, movingPiece.row-1)!=null
                     &&
-                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.color!=DraughtColor.BLACK
+                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.player!=DraughtPlayers.PLAYER1
                     &&
-                    movingPiece.draughtRank==DraughtRank.king
+                    movingPiece.draughtRank==DraughtRank.KING
                     &&
                     movingPiece.col-1<=6
             -> {
@@ -275,7 +275,7 @@ class DraughtClass {
             }
             pieceAt(movingPiece.col+1, movingPiece.row+1)!=null
                     &&
-                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.color!=DraughtColor.BLACK
+                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.player!=DraughtPlayers.PLAYER1
                     &&
                     movingPiece.col+1<=6
             -> {
@@ -288,7 +288,7 @@ class DraughtClass {
             }
             pieceAt(movingPiece.col-1, movingPiece.row+1)!=null
                     &&
-                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.color!=DraughtColor.BLACK
+                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.player!=DraughtPlayers.PLAYER1
                     &&
                     movingPiece.col-1<=6
             -> {
@@ -310,19 +310,19 @@ class DraughtClass {
 
         when {
             toRow + offRow == 0 -> {
-                pieceBox.add(DraughtPiece(toCol + offCol, toRow + offRow, movingPiece.color, movingPiece.resId, DraughtRank.king)
+                pieceBox.add(DraughtPiece(toCol + offCol, toRow + offRow, movingPiece.player, movingPiece.resId, DraughtRank.KING)
                 )
                 Log.d(TAG, "KING")
             }
-            movingPiece.draughtRank==DraughtRank.king -> {
-                pieceBox.add(DraughtPiece(toCol + offCol, toRow + offRow, movingPiece.color, movingPiece.resId, DraughtRank.king)
+            movingPiece.draughtRank==DraughtRank.KING -> {
+                pieceBox.add(DraughtPiece(toCol + offCol, toRow + offRow, movingPiece.player, movingPiece.resId, DraughtRank.KING)
                 )
                 Log.d(TAG, "KING")
                 if(offCol!=0 && offRow!=0 && toCol > 0 && toCol <=6 && toRow > 0 && toRow<=6 ){
                     checkForFutureKingMove(DraughtPiece(
                         toCol + offCol,
                         toRow + offRow,
-                        movingPiece.color,
+                        movingPiece.player,
                         movingPiece.resId,
                         movingPiece.draughtRank
                     ))
@@ -333,16 +333,16 @@ class DraughtClass {
                     DraughtPiece(
                         toCol + offCol,
                         toRow + offRow,
-                        movingPiece.color,
+                        movingPiece.player,
                         movingPiece.resId,
-                        DraughtRank.normal
+                        DraughtRank.NORMAL
                     )
                 )
                 if(offCol!=0 && offRow!=0 && toCol > 0 && toCol <=6 && toRow > 0 && toRow<=6 ){
                     checkForFutureMove(DraughtPiece(
                         toCol + offCol,
                         toRow + offRow,
-                        movingPiece.color,
+                        movingPiece.player,
                         movingPiece.resId,
                         movingPiece.draughtRank
                     ))
@@ -365,21 +365,21 @@ class DraughtClass {
                     DraughtPiece(
                         toCol + offCol,
                         toRow + offRow,
-                        movingPiece.color,
+                        movingPiece.player,
                         movingPiece.resId,
-                        DraughtRank.king
+                        DraughtRank.KING
                     )
                 )
                 Log.d(TAG, "KING")
             }
-            movingPiece.draughtRank==DraughtRank.king -> {
+            movingPiece.draughtRank==DraughtRank.KING -> {
                 pieceBox.add(
                     DraughtPiece(
                         toCol + offCol,
                         toRow + offRow,
-                        movingPiece.color,
+                        movingPiece.player,
                         movingPiece.resId,
-                        DraughtRank.king
+                        DraughtRank.KING
                     )
                 )
                 Log.d(TAG, "KING")
@@ -387,7 +387,7 @@ class DraughtClass {
                     checkForBlackKingFutureMove(DraughtPiece(
                         toCol + offCol,
                         toRow + offRow,
-                        movingPiece.color,
+                        movingPiece.player,
                         movingPiece.resId,
                         movingPiece.draughtRank
                     ))
@@ -398,9 +398,9 @@ class DraughtClass {
                     DraughtPiece(
                         toCol + offCol,
                         toRow + offRow,
-                        movingPiece.color,
+                        movingPiece.player,
                         movingPiece.resId,
-                        DraughtRank.normal
+                        DraughtRank.NORMAL
                     )
                 )
 
@@ -408,7 +408,7 @@ class DraughtClass {
                     checkForBlackFutureMove(DraughtPiece(
                         toCol + offCol,
                         toRow + offRow,
-                        movingPiece.color,
+                        movingPiece.player,
                         movingPiece.resId,
                         movingPiece.draughtRank
                     ))
@@ -428,7 +428,7 @@ class DraughtClass {
         var nextTempObject: DraughtPiece? = null
         var draughtPiece = pieceAt(toCol, toRow)?.let { it ->
 
-            if (it.color == movingPiece.color) {
+            if (it.player == movingPiece.player) {
                 return false
             }
 
@@ -459,12 +459,12 @@ class DraughtClass {
         }
 
         pieceBox.remove(movingPiece)
-        var mainPiece = DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king)
+        var mainPiece = DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.player, movingPiece.resId, DraughtRank.KING)
         if(pieceAt(mainPiece.col, mainPiece.row)==null){
             getTypePlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
         }
-        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.color!=DraughtColor.RED){
+        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.player!=DraughtPlayers.PLAYER2){
             getTypePlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
         }
@@ -479,7 +479,7 @@ class DraughtClass {
         var movingPiece = pieceAt(fromCol, fromRow) ?: return false
         var draughtPiece = pieceAt(toCol, toRow)?.let {
 
-            if (it.color == movingPiece.color) {
+            if (it.player == movingPiece.player) {
                 return false
             }
 
@@ -509,12 +509,12 @@ class DraughtClass {
         }
         pieceBox.remove(movingPiece)
 
-        var mainPiece = DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.normal)
+        var mainPiece = DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.player, movingPiece.resId, DraughtRank.NORMAL)
         if(pieceAt(mainPiece.col, mainPiece.row)==null){
             getBlackPlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
         }
-        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.color!=DraughtColor.RED){
+        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.player!=DraughtPlayers.PLAYER2){
             getBlackPlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
 
@@ -531,7 +531,7 @@ class DraughtClass {
         var tempObject: DraughtPiece? =null
         var draughtPiece: Unit? = pieceAt(toCol, toRow)?.let {
 
-            if (it.color == movingPiece.color) {
+            if (it.player == movingPiece.player) {
                 return false
             }
 
@@ -561,19 +561,19 @@ class DraughtClass {
         return when {
             toRow+offRow==0 -> {
                 myBox.add(movingPiece)
-                myBox.add(DraughtPiece(toCol, toRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
+                myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.KING))
                 //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
                 true
             }
-            movingPiece.draughtRank==DraughtRank.king -> {
+            movingPiece.draughtRank==DraughtRank.KING -> {
                 myBox.add(movingPiece)
-                myBox.add(DraughtPiece(toCol, toRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
+                myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.KING))
                 //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
                 true
             }
             else -> {
                 myBox.add(movingPiece)
-                myBox.add(DraughtPiece(toCol, toRow, movingPiece.color, movingPiece.resId, DraughtRank.normal))
+                myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.NORMAL))
                 //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.normal))
                 true
             }
@@ -588,7 +588,7 @@ class DraughtClass {
         var tempObject: DraughtPiece? =null
         var draughtPiece: Unit? = pieceAt(toCol, toRow)?.let {
             if (it==null) return false
-            if (it.color == movingPiece.color) {
+            if (it.player == movingPiece.player) {
                 return false
             }
 
@@ -614,19 +614,19 @@ class DraughtClass {
         return when {
             toRow+offRow==7 -> {
                 myBox.add(movingPiece)
-                myBox.add(DraughtPiece(toCol, toRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
+                myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.KING))
                 //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
                 true
             }
-            movingPiece.draughtRank==DraughtRank.king -> {
+            movingPiece.draughtRank==DraughtRank.KING -> {
                 myBox.add(movingPiece)
-                myBox.add(DraughtPiece(toCol, toRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
+                myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.KING))
                 //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
                 true
             }
             else -> {
                 myBox.add(movingPiece)
-                myBox.add(DraughtPiece(toCol, toRow, movingPiece.color, movingPiece.resId, DraughtRank.normal))
+                myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.NORMAL))
                 //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.normal))
                 true
 
@@ -672,29 +672,29 @@ class DraughtClass {
         pieceBox.removeAll(pieceBox)
         for(i in 0..7){
             if(i % 2==1){
-                pieceBox.add(DraughtPiece(i,0, DraughtColor.BLACK, listId1[i], DraughtRank.normal))
+                pieceBox.add(DraughtPiece(i,0, DraughtPlayers.PLAYER1, listId1[i], DraughtRank.NORMAL))
             }
             else{
-                pieceBox.add(DraughtPiece(i,7, DraughtColor.RED, listId1[i], DraughtRank.normal))
+                pieceBox.add(DraughtPiece(i,7, DraughtPlayers.PLAYER2, listId1[i], DraughtRank.NORMAL))
             }
         }
 
         for(i in 0..7){
             if(i % 2 != 1){
-                pieceBox.add(DraughtPiece(i,1, DraughtColor.BLACK, listId2[i], DraughtRank.normal))
+                pieceBox.add(DraughtPiece(i,1, DraughtPlayers.PLAYER1, listId2[i], DraughtRank.NORMAL))
             }
             else{
-                pieceBox.add(DraughtPiece(i,6, DraughtColor.RED, listId2[i], DraughtRank.normal))
+                pieceBox.add(DraughtPiece(i,6, DraughtPlayers.PLAYER2, listId2[i], DraughtRank.NORMAL))
             }
 
         }
 
         for(i in 0..7){
             if(i % 2 == 1){
-                pieceBox.add(DraughtPiece(i,2, DraughtColor.BLACK, listId3[i], DraughtRank.normal))
+                pieceBox.add(DraughtPiece(i,2, DraughtPlayers.PLAYER1, listId3[i], DraughtRank.NORMAL))
             }
             else{
-                pieceBox.add(DraughtPiece(i,5, DraughtColor.RED, listId3[i], DraughtRank.normal))
+                pieceBox.add(DraughtPiece(i,5, DraughtPlayers.PLAYER2, listId3[i], DraughtRank.NORMAL))
             }
 
         }
@@ -720,7 +720,7 @@ class DraughtClass {
     fun playOne(): Int {
         var count=0
         pieceBox.forEach { piece ->
-            if(piece.color == DraughtColor.BLACK){
+            if(piece.player == DraughtPlayers.PLAYER1){
                 count++
             }
 
@@ -731,7 +731,7 @@ class DraughtClass {
     fun playTwo(): Int{
         var count=0
         pieceBox.forEach { piece ->
-            if(piece.color == DraughtColor.RED){
+            if(piece.player == DraughtPlayers.PLAYER2){
                 count++
             }
         }
@@ -752,8 +752,8 @@ class DraughtClass {
                     board+= " ."
                 }
                 else{
-                    val red = piece.color == DraughtColor.RED
-                    val black = piece.color == DraughtColor.BLACK
+                    val red = piece.player == DraughtPlayers.PLAYER2
+                    val black = piece.player == DraughtPlayers.PLAYER1
                     board +=" "
 
                     if(red){

@@ -21,14 +21,14 @@ class Setting : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.setting)
 
-        playerOneColor= findViewById(R.id.playerOneColor)
-        playerTwoColor = findViewById(R.id.playerTwoColor)
-        boardColor = findViewById(R.id.boardColor)
-        updateBtn = findViewById(R.id.updateBtn)
-        cancelBtn = findViewById(R.id.cancelBtn)
-
-        Color.argb(255, 0, 255, 0).also { defaultColorOne.color = it }
-        Color.argb(255, 217, 219, 218).also { defaultColorTwo.color = it }
+//        playerOneColor= findViewById(R.id.playerOneColor)
+//        playerTwoColor = findViewById(R.id.playerTwoColor)
+//        boardColor = findViewById(R.id.boardColor)
+//        updateBtn = findViewById(R.id.updateBtn)
+//        cancelBtn = findViewById(R.id.cancelBtn)
+//
+//        Color.argb(255, 0, 255, 0).also { defaultColorOne.color = it }
+//        Color.argb(255, 217, 219, 218).also { defaultColorTwo.color = it }
 
 //        playerOneColor?.setOnClickListener{
 //            val colorPickerPopUp: ColorPickerPopup() = ColorPickerPopup.Builder(this)

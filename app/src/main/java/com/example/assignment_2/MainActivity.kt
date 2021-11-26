@@ -4,21 +4,23 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 
 const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(), DraughtService {
-    private var draughtModel = DraughtClass()
+    private var draughtModel = DraughtModel()
     private var playerOneText: TextView? = null
     private var playerTwoText: TextView? = null
     private var playerOneValue: TextView? = null
     private var playerTwoValue: TextView? = null
+    private var currentPlayer: TextView? = null
     private var settingButton: Button? = null
     private var reset: Button? = null
-    private var playerOne=0
-    private var playerTwo=0
+    private var isTrue:Boolean=false
+    private var previousPlayOne:Boolean=false
+    private var previousPlayTwo:Boolean=false
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +32,7 @@ class MainActivity : AppCompatActivity(), DraughtService {
         playerTwoText = findViewById<TextView>(R.id.player2_text)
         playerOneValue = findViewById<TextView>(R.id.player1Value)
         playerTwoValue =  findViewById<TextView>(R.id.player2_value)
+        currentPlayer = findViewById(R.id.playerMove)
         reset = findViewById<Button>(R.id.reset)
         settingButton=findViewById<Button>(R.id.settings)
         Log.d(TAG, "${draughtModel.showBoard()}")
@@ -42,9 +45,9 @@ class MainActivity : AppCompatActivity(), DraughtService {
             draughtView.invalidate()
             setPlayerScores()
         }
-
         settingButton?.setOnClickListener { startSettingActivity() }
         setPlayerScores()
+        currentPlayerMovement()
 
 
     }
@@ -53,20 +56,25 @@ class MainActivity : AppCompatActivity(), DraughtService {
         return draughtModel?.pieceAt(col, row)
     }
 
-    override fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Int {
+    override fun playerTwoMove(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Int {
         if(draughtModel.movePiece(fromCol, fromRow, toCol, toRow)){
             val draughtView = findViewById<CustomView>(R.id.draught_view)
             draughtView.invalidate()
+            isTrue=false
+            currentPlayerMovement()
             setPlayerScores()
+
             return 0
         }
       return -1
     }
 
-    override fun moveBlackPiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Int {
+    override fun playerOneMove(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Int {
         if(draughtModel.moveBlackPiece(fromCol, fromRow, toCol, toRow)){
             val draughtView = findViewById<CustomView>(R.id.draught_view)
             draughtView.invalidate()
+            isTrue=true
+            currentPlayerMovement()
             setPlayerScores()
             return 0
         }
@@ -75,23 +83,29 @@ class MainActivity : AppCompatActivity(), DraughtService {
     }
 
     private fun setPlayerScores() {
-        playerOneValue?.text = playOne().toString()
-        playerTwoValue?.text = playTwo().toString()
+        playerOneValue?.text = totalPlayerOnePieces().toString()
+        playerTwoValue?.text = totalPlayerTwoPieces().toString()
     }
 
-    override fun moveKing(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Int {
+    override fun playerTwoKingMove(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Int {
         if(draughtModel.moveKing(fromCol, fromRow, toCol, toRow)){
             val draughtView = findViewById<CustomView>(R.id.draught_view)
             draughtView.invalidate()
+            isTrue=false
+            currentPlayerMovement()
+            setPlayerScores()
             return 0
         }
         return -1
     }
 
-    override fun moveBlackKing(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Int {
+    override fun playerOneKingMove(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Int {
         if(draughtModel.moveBlackKing(fromCol, fromRow, toCol, toRow)){
             val draughtView = findViewById<CustomView>(R.id.draught_view)
             draughtView.invalidate()
+            isTrue=true
+            currentPlayerMovement()
+            setPlayerScores()
             return 0
         }
         return -1
@@ -106,11 +120,11 @@ class MainActivity : AppCompatActivity(), DraughtService {
     }
 
 
-    override fun playOne(): Int {
+    override fun totalPlayerOnePieces(): Int {
         return draughtModel.playOne()
     }
 
-    override fun playTwo(): Int {
+    override fun totalPlayerTwoPieces(): Int {
         return draughtModel.playTwo()
     }
 
@@ -118,6 +132,32 @@ class MainActivity : AppCompatActivity(), DraughtService {
         var intent: Intent = Intent(this, Setting::class.java)
         startActivity(intent)
     }
+
+    private fun currentPlayerMovement(){
+        if(!isTrue && !previousPlayOne && setFutureMove().size!=2){
+            currentPlayer?.text = "PlayerOne"
+            previousPlayOne=true
+            previousPlayTwo=false
+        }
+        else if(isTrue && previousPlayOne && setFutureMove().size==2){
+            currentPlayer?.text = "PlayerOne"
+            previousPlayOne=false
+            previousPlayTwo=false
+        }
+        else if(isTrue && !previousPlayTwo && setFutureMove().size!=2){
+            currentPlayer?.text = "PlayerTwo"
+            previousPlayTwo=true
+            previousPlayOne=false
+
+        }
+        else if(!isTrue && previousPlayTwo && setFutureMove().size==2){
+            currentPlayer?.text = "PlayerTwo"
+            previousPlayTwo=false
+            previousPlayOne=false
+
+        }
+    }
+
 
 
 }

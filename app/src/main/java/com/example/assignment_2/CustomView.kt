@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.widget.TextView
 
 class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attribs) {
     // private fields of the class
@@ -100,10 +99,10 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         var parent: Int = 0
-        if (widthMeasureSpec > heightMeasureSpec) {
-            parent = heightMeasureSpec
+        parent = if (widthMeasureSpec > heightMeasureSpec) {
+            heightMeasureSpec
         } else {
-            parent = widthMeasureSpec
+            widthMeasureSpec
         }
 
         this.setMeasuredDimension(parent, parent)
@@ -111,25 +110,19 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
 
 
     private fun drawPieces(canvas: Canvas?) {
-        playerOneTotalNumber=0
-        playerTwoTotalNumber=0
         for (row in 7 downTo 0) {
             for (col in 7 downTo 0) {
                 var piece = draughtService?.pieceAt(col, row)
-                if (piece != null && piece.color == DraughtColor.RED && piece.draughtRank==DraughtRank.normal) {
+                if (piece != null && piece.player == DraughtPlayers.PLAYER2 && piece.draughtRank==DraughtRank.NORMAL) {
                     drawPlayer1(canvas, row, col, _red)
-                    playerOneTotalNumber++
-                } else if (piece != null && piece.color == DraughtColor.BLACK && piece.draughtRank==DraughtRank.normal) {
+                } else if (piece != null && piece.player == DraughtPlayers.PLAYER1 && piece.draughtRank==DraughtRank.NORMAL) {
                     drawPlayer1(canvas, row, col, _black)
-                    playerTwoTotalNumber++
                 }
-                else if(piece != null && piece.color == DraughtColor.RED && piece.draughtRank==DraughtRank.king){
+                else if(piece != null && piece.player == DraughtPlayers.PLAYER2 && piece.draughtRank==DraughtRank.KING){
                     drawPlayer2(canvas, row, col, _red)
-                    playerOneTotalNumber++
                 }
-                else if(piece != null && piece.color == DraughtColor.BLACK && piece.draughtRank==DraughtRank.king){
+                else if(piece != null && piece.player == DraughtPlayers.PLAYER1 && piece.draughtRank==DraughtRank.KING){
                     drawPlayer2(canvas, row, col, _black)
-                    playerTwoTotalNumber++
                 }
             }
         }
@@ -165,190 +158,27 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
 
 
     private fun gameController(fromCol: Int, fromRow: Int, col: Int, row: Int) {
-        var tempPiece = draughtService?.pieceAt(col, row)
         if(playerOneCounter && findPlayer(fromCol, fromRow)==0){
             if(fromRow==7 && draughtService?.pieceAt(col, row)==null){
-                if(!futureMoveTwo){
-                    if(draughtService?.moveBlackKing(fromCol, fromRow, col, row)==0){
-                        if(draughtService?.setFutureMove()?.size==2){
-                            futureMoveTwo=true
-                            playerTwoCounter=false
-                            playerOneCounter=true
-                        }
-                        else{
-                            playerTwoCounter=true
-                            playerOneCounter=false
-                        }
-
-                    }
-                }
-                else if(futureMoveTwo){
-                    var draughtPiece1 = draughtService?.setFutureMove()?.get(0)
-                    var draughtPiece2 = draughtService?.setFutureMove()?.get(1)
-                    if(draughtPiece1?.col==fromCol && draughtPiece1?.row==fromRow && draughtPiece2?.row==row && draughtPiece2?.col==col){
-                        draughtService?.moveBlackKing(fromCol, fromRow, col, row)
-                        futureMoveTwo=false
-                        draughtService?.clearFutureMove()
-                        playerTwoCounter=true
-                        playerOneCounter=false
-                    }
-                    else{
-                        return
-                    }
-                }
-
+                playerOneKingController(fromCol, fromRow, col, row)
             }
-            else if(draughtService?.pieceAt(fromCol, fromRow)?.draughtRank==DraughtRank.king){
-                if(!futureMoveTwo){
-                    if(draughtService?.moveBlackKing(fromCol, fromRow, col, row)==0){
-                        if(draughtService?.setFutureMove()?.size==2){
-                            futureMoveTwo=true
-                            playerTwoCounter=false
-                            playerOneCounter=true
-                        }
-                        else{
-                            playerTwoCounter=true
-                            playerOneCounter=false
-                        }
-
-                    }
-                }
-                else if(futureMoveTwo){
-                    var draughtPiece1 = draughtService?.setFutureMove()?.get(0)
-                    var draughtPiece2 = draughtService?.setFutureMove()?.get(1)
-                    if(draughtPiece1?.col==fromCol && draughtPiece1?.row==fromRow && draughtPiece2?.row==row && draughtPiece2?.col==col){
-                        draughtService?.moveBlackKing(fromCol, fromRow, col, row)
-                        futureMoveTwo=false
-                        draughtService?.clearFutureMove()
-                        playerTwoCounter=true
-                        playerOneCounter=false
-                    }
-                    else{
-                        return
-                    }
-                }
+            else if(draughtService?.pieceAt(fromCol, fromRow)?.draughtRank==DraughtRank.KING){
+                playerOneKingController(fromCol, fromRow, col, row)
             }
             else{
-                if(!futureMoveTwo){
-                    if(draughtService?.moveBlackPiece(fromCol, fromRow, col, row)==0){
-                        if(draughtService?.setFutureMove()?.size==2){
-                            futureMoveTwo=true
-                            playerTwoCounter=false
-                            playerOneCounter=true
-                        }
-                        else{
-                            playerTwoCounter=true
-                            playerOneCounter=false
-                        }
-
-                    }
-                }
-                else if(futureMoveTwo){
-                    var draughtPiece1 = draughtService?.setFutureMove()?.get(0)
-                    var draughtPiece2 = draughtService?.setFutureMove()?.get(1)
-                    if(draughtPiece1?.col==fromCol && draughtPiece1?.row==fromRow && draughtPiece2?.row==row && draughtPiece2?.col==col){
-                        draughtService?.moveBlackPiece(fromCol, fromRow, col, row)
-                        futureMoveTwo=false
-                        draughtService?.clearFutureMove()
-                        playerTwoCounter=true
-                        playerOneCounter=false
-                    }
-                    else{
-                        return
-                    }
-                }
+                playerOneController(fromCol, fromRow, col, row)
             }
 
         }
         else if (playerTwoCounter && findPlayer(fromCol, fromRow)==1){
             if(row==0 && draughtService?.pieceAt(col, row)==null){
-                if(!futureMoveOne){
-                    if(draughtService?.moveKing(fromCol, fromRow, col, row)==0){
-                        if(draughtService?.setFutureMove()?.size==2){
-                            futureMoveOne=true
-                            playerTwoCounter=true
-                            playerOneCounter=false
-                        }
-                        else{
-                            playerTwoCounter=false
-                            playerOneCounter=true
-                        }
-                    }
-                }
-                else if(futureMoveOne){
-                    var draughtPiece1 = draughtService?.setFutureMove()?.get(0)
-                    var draughtPiece2 = draughtService?.setFutureMove()?.get(1)
-                    if(draughtPiece1?.col==fromCol && draughtPiece1?.row==fromRow && draughtPiece2?.row==row && draughtPiece2?.col==col){
-                        draughtService?.moveKing(fromCol, fromRow, col, row)
-                        futureMoveOne=false
-                        draughtService?.clearFutureMove()
-                        playerTwoCounter=false
-                        playerOneCounter=true
-                    }
-                    else{
-                        return
-                    }
-                }
-
+                playerTwoKingController(fromCol, fromRow, col, row)
             }
-            else if(draughtService?.pieceAt(fromCol, fromRow)?.draughtRank==DraughtRank.king){
-                if(!futureMoveOne){
-                    if(draughtService?.moveKing(fromCol, fromRow, col, row)==0){
-                        if(draughtService?.setFutureMove()?.size==2){
-                            futureMoveOne=true
-                            playerTwoCounter=true
-                            playerOneCounter=false
-                        }
-                        else{
-                            playerTwoCounter=false
-                            playerOneCounter=true
-                        }
-                    }
-                }
-                else if(futureMoveOne){
-                    var draughtPiece1 = draughtService?.setFutureMove()?.get(0)
-                    var draughtPiece2 = draughtService?.setFutureMove()?.get(1)
-                    if(draughtPiece1?.col==fromCol && draughtPiece1?.row==fromRow && draughtPiece2?.row==row && draughtPiece2?.col==col){
-                        draughtService?.moveKing(fromCol, fromRow, col, row)
-                        futureMoveOne=false
-                        draughtService?.clearFutureMove()
-                        playerTwoCounter=false
-                        playerOneCounter=true
-                    }
-                    else{
-                        return
-                    }
-                }
+            else if(draughtService?.pieceAt(fromCol, fromRow)?.draughtRank==DraughtRank.KING){
+                playerTwoKingController(fromCol, fromRow, col, row)
             }
             else{
-                if(!futureMoveOne){
-                    if(draughtService?.movePiece(fromCol, fromRow, col, row)==0){
-                        if(draughtService?.setFutureMove()?.size==2){
-                            futureMoveOne=true
-                            playerTwoCounter=true
-                            playerOneCounter=false
-                        }
-                        else{
-                            playerTwoCounter=false
-                            playerOneCounter=true
-                        }
-                    }
-                }
-                else if(futureMoveOne){
-                    var draughtPiece1 = draughtService?.setFutureMove()?.get(0)
-                    var draughtPiece2 = draughtService?.setFutureMove()?.get(1)
-                    if(draughtPiece1?.col==fromCol && draughtPiece1?.row==fromRow && draughtPiece2?.row==row && draughtPiece2?.col==col){
-                        draughtService?.movePiece(fromCol, fromRow, col, row)
-                        futureMoveOne=false
-                        draughtService?.clearFutureMove()
-                        playerTwoCounter=false
-                        playerOneCounter=true
-                    }
-                    else{
-                        return
-                    }
-                }
-
+                playerTwoController(fromCol, fromRow, col, row)
             }
 
         }
@@ -356,20 +186,145 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
 
     }
 
+    private fun playerTwoController(
+        fromCol: Int,
+        fromRow: Int,
+        col: Int,
+        row: Int
+    ) {
+        if (!futureMoveOne) {
+            if (draughtService?.playerTwoMove(fromCol, fromRow, col, row) == 0) {
+                if (draughtService?.setFutureMove()?.size == 2) {
+                    futureMoveOne = true
+                    playerTwoCounter = true
+                    playerOneCounter = false
+                } else {
+                    playerTwoCounter = false
+                    playerOneCounter = true
+                }
+            }
+        } else if (futureMoveOne) {
+            var draughtPiece1 = draughtService?.setFutureMove()?.get(0)
+            var draughtPiece2 = draughtService?.setFutureMove()?.get(1)
+            if (draughtPiece1?.col == fromCol && draughtPiece1?.row == fromRow && draughtPiece2?.row == row && draughtPiece2?.col == col) {
+                draughtService?.playerTwoMove(fromCol, fromRow, col, row)
+                futureMoveOne = false
+                draughtService?.clearFutureMove()
+                playerTwoCounter = false
+                playerOneCounter = true
+            } else {
+                return
+            }
+        }
+    }
+
+    private fun playerTwoKingController(
+        fromCol: Int,
+        fromRow: Int,
+        col: Int,
+        row: Int
+    ) {
+        if (!futureMoveOne) {
+            if (draughtService?.playerTwoKingMove(fromCol, fromRow, col, row) == 0) {
+                if (draughtService?.setFutureMove()?.size == 2) {
+                    futureMoveOne = true
+                    playerTwoCounter = true
+                    playerOneCounter = false
+                } else {
+                    playerTwoCounter = false
+                    playerOneCounter = true
+                }
+            }
+        } else if (futureMoveOne) {
+            var draughtPiece1 = draughtService?.setFutureMove()?.get(0)
+            var draughtPiece2 = draughtService?.setFutureMove()?.get(1)
+            if (draughtPiece1?.col == fromCol && draughtPiece1?.row == fromRow && draughtPiece2?.row == row && draughtPiece2?.col == col) {
+                draughtService?.playerTwoKingMove(fromCol, fromRow, col, row)
+                futureMoveOne = false
+                draughtService?.clearFutureMove()
+                playerTwoCounter = false
+                playerOneCounter = true
+            } else {
+                return
+            }
+        }
+    }
+
+    private fun playerOneController(
+        fromCol: Int,
+        fromRow: Int,
+        col: Int,
+        row: Int
+    ) {
+        if (!futureMoveTwo) {
+            if (draughtService?.playerOneMove(fromCol, fromRow, col, row) == 0) {
+                if (draughtService?.setFutureMove()?.size == 2) {
+                    futureMoveTwo = true
+                    playerTwoCounter = false
+                    playerOneCounter = true
+                } else {
+                    playerTwoCounter = true
+                    playerOneCounter = false
+                }
+
+            }
+        } else if (futureMoveTwo) {
+            var draughtPiece1 = draughtService?.setFutureMove()?.get(0)
+            var draughtPiece2 = draughtService?.setFutureMove()?.get(1)
+            if (draughtPiece1?.col == fromCol && draughtPiece1?.row == fromRow && draughtPiece2?.row == row && draughtPiece2?.col == col) {
+                draughtService?.playerOneMove(fromCol, fromRow, col, row)
+                futureMoveTwo = false
+                draughtService?.clearFutureMove()
+                playerTwoCounter = true
+                playerOneCounter = false
+            } else {
+                return
+            }
+        }
+    }
+
+    private fun playerOneKingController(
+        fromCol: Int,
+        fromRow: Int,
+        col: Int,
+        row: Int
+    ) {
+        if (!futureMoveTwo) {
+            if (draughtService?.playerOneKingMove(fromCol, fromRow, col, row) == 0) {
+                if (draughtService?.setFutureMove()?.size == 2) {
+                    futureMoveTwo = true
+                    playerTwoCounter = false
+                    playerOneCounter = true
+                } else {
+                    playerTwoCounter = true
+                    playerOneCounter = false
+                }
+
+            }
+        } else if (futureMoveTwo) {
+            var draughtPiece1 = draughtService?.setFutureMove()?.get(0)
+            var draughtPiece2 = draughtService?.setFutureMove()?.get(1)
+            if (draughtPiece1?.col == fromCol && draughtPiece1?.row == fromRow && draughtPiece2?.row == row && draughtPiece2?.col == col) {
+                draughtService?.playerOneKingMove(fromCol, fromRow, col, row)
+                futureMoveTwo = false
+                draughtService?.clearFutureMove()
+                playerTwoCounter = true
+                playerOneCounter = false
+            } else {
+                return
+            }
+        }
+    }
+
     private fun findPlayer(fromCol: Int, fromRow: Int):Int{
         var draughtPiece = draughtService?.pieceAt(fromCol, fromRow)
         draughtPiece?:return -1
-        if(draughtPiece!!.color==DraughtColor.BLACK){
+        if(draughtPiece!!.player==DraughtPlayers.PLAYER1){
             return 0
         }
         return 1
     }
 
-//    private fun setPlayers(){
-//        .text=playerOneTotalNumber.toString()
-//        mainActivity..text=playerTwoTotalNumber.toString()
-//
-//    }
 
 
 
