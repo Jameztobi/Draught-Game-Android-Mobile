@@ -10,4 +10,12 @@ interface DraughtService {
     fun moveKing(fromCol: Int, fromRow:Int, toCol:Int, toRow:Int):Int
 
     fun moveBlackKing(fromCol: Int, fromRow:Int, toCol:Int, toRow:Int): Int
+
+    fun setFutureMove(): ArrayList<DraughtPiece>
+
+    fun clearFutureMove()
+
+    fun playOne(): Int
+
+    fun playTwo(): Int
 }

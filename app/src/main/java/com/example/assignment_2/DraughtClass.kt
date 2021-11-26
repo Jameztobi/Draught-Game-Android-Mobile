@@ -5,9 +5,11 @@ import android.util.Log
 class DraughtClass {
 
     var pieceBox = mutableSetOf<DraughtPiece>()
+    var myBox = ArrayList<DraughtPiece>()
     var listId1=arrayOf<Int>(1,  2,  3,  4, 5,  6,  7,  8)
     var listId2=arrayOf<Int>(9, 10, 11, 12, 13, 14, 15, 16)
     var listId3=arrayOf<Int>(7, 18, 19, 20, 21, 22, 23, 24)
+
 
     init{
         reset()
@@ -37,7 +39,7 @@ class DraughtClass {
                 offRow=-1
                 offCol=-1
             }
-            if( tempObject !=null) return false
+            if(tempObject !=null && offCol!=0 && offRow!=0 || toCol==0  || toRow==0 || toCol==7) return false
             pieceBox.remove(it)
         }
         pieceBox.remove(movingPiece)
@@ -53,7 +55,6 @@ class DraughtClass {
 
         }
 
-//
         return true
 
     }
@@ -83,7 +84,7 @@ class DraughtClass {
                 offRow=1
                 offCol=-1
             }
-            if( tempObject !=null) return false
+            if( tempObject !=null && offCol!=0 && offRow!=0 || toCol==0 || toCol==7 || toRow==7) return false
             pieceBox.remove(it)
         }
         pieceBox.remove(movingPiece)
@@ -103,14 +104,17 @@ class DraughtClass {
 
     }
 
-    private fun checkForFutureMove(toRow: Int, offRow: Int, toCol: Int, offCol: Int, movingPiece: DraughtPiece):Boolean{
+    private fun checkForFutureMove(movingPiece: DraughtPiece):Boolean{
         when {
             pieceAt(movingPiece.col+1, movingPiece.row-1)!=null &&
                     pieceAt(movingPiece.col+1, movingPiece.row-1)!!.color!=DraughtColor.RED
                     &&
-                    movingPiece.col+1!=7 -> {
+                    movingPiece.col+1<=6
+            -> {
                 if(!futureMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row-1)){
-                    futureMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row-1)
+                    if(!futureMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row-1)){
+                        return false
+                    }
                 }
                 return true
             }
@@ -118,22 +122,75 @@ class DraughtClass {
                     &&
                     pieceAt(movingPiece.col-1, movingPiece.row-1)!!.color!=DraughtColor.RED
                     &&
-                    movingPiece.col+1!=7 -> {
+                    movingPiece.col-1<=6
+                     -> {
                 if(!futureMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row-1)){
-                    futureMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row-1)
+                    if(!futureMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row-1)){
+                        return false
+                    }
                 }
                 return true
             }
 
+
+            else -> {
+                return false
+            }
+        }
+    }
+
+
+
+    private fun checkForBlackFutureMove(movingPiece: DraughtPiece):Boolean{
+        when {
+            pieceAt(movingPiece.col+1, movingPiece.row+1)!=null
+                    &&
+                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.color!=DraughtColor.BLACK
+                    &&
+                    movingPiece.col+1<=6
+            -> {
+                if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row+1)){
+                    if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row+1)){
+                        return false
+                    }
+                }
+                return true
+            }
+            pieceAt(movingPiece.col-1, movingPiece.row+1)!=null
+                    &&
+                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.color!=DraughtColor.BLACK
+                    &&
+                    movingPiece.col-1<=6
+            -> {
+                if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row+1)){
+                    if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row+1)){
+                        return false
+                    }
+                }
+                return true
+            }
+
+
+            else -> {
+                return false
+            }
+        }
+    }
+
+    private fun checkForFutureKingMove(movingPiece: DraughtPiece):Boolean{
+        when{
             pieceAt(movingPiece.col+1, movingPiece.row+1)!=null
                     &&
                     movingPiece.draughtRank==DraughtRank.king
                     &&
                     pieceAt(movingPiece.col+1, movingPiece.row+1)?.color!=DraughtColor.RED
                     &&
-                    movingPiece.col+1!=7 -> {
+                    movingPiece.col+1<=6
+            -> {
                 if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row+1)){
-                    futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row+1)
+                    if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row+1)){
+                        return false
+                    }
                 }
                 return true
             }
@@ -143,49 +200,61 @@ class DraughtClass {
                     &&
                     pieceAt(movingPiece.col-1, movingPiece.row+1)?.color!=DraughtColor.RED
                     &&
-                    movingPiece.col+1!=7 -> {
+                    movingPiece.col-1<=6
+            -> {
                 if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row+1)){
-                    futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row+1)
+                    if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row+1)){
+                        return false
+                    }
                 }
                 return true
             }
-
+            pieceAt(movingPiece.col+1, movingPiece.row-1)!=null &&
+                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.color!=DraughtColor.RED
+                    &&
+                    movingPiece.col+1<=6
+            -> {
+                if(!futureMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row-1)){
+                    if(!futureMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row-1)){
+                        return false
+                    }
+                }
+                return true
+            }
+            pieceAt(movingPiece.col-1, movingPiece.row-1)!=null
+                    &&
+                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.color!=DraughtColor.RED
+                    &&
+                    movingPiece.col-1<=6
+            -> {
+                if(!futureMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row-1)){
+                    if(!futureMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row-1)){
+                        return false
+                    }
+                }
+                return true
+            }
             else -> {
                 return false
             }
+
         }
+
     }
 
-    private fun checkForBlackFutureMove(toRow: Int, offRow: Int, toCol: Int, offCol: Int, movingPiece: DraughtPiece):Boolean{
-        when {
-            pieceAt(movingPiece.col+1, movingPiece.row+1)!=null
-                    &&
-                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.color!=DraughtColor.BLACK
-                    &&
-                    movingPiece.col+1!=7 -> {
-                if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row+1)){
-                    futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row+1)
-                }
-                return true
-            }
-            pieceAt(movingPiece.col-1, movingPiece.row+1)!=null
-                    &&
-                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.color!=DraughtColor.BLACK
-                    &&
-                    movingPiece.col+1!=7 -> {
-                if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row+1)){
-                    futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row+1)
-                }
-                return true
-            }
+    private fun checkForBlackKingFutureMove(movingPiece: DraughtPiece):Boolean{
+        when{
             pieceAt(movingPiece.col+1, movingPiece.row-1)!=null &&
                     pieceAt(movingPiece.col+1, movingPiece.row-1)!!.color!=DraughtColor.BLACK
                     &&
                     movingPiece.draughtRank==DraughtRank.king
                     &&
-                    movingPiece.col+1!=7 -> {
+                    movingPiece.col+1<=6
+            -> {
                 if(!futureMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row-1)){
-                    futureMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row-1)
+                    if(!futureMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row-1)){
+                        return false
+                    }
                 }
                 return true
             }
@@ -195,17 +264,45 @@ class DraughtClass {
                     &&
                     movingPiece.draughtRank==DraughtRank.king
                     &&
-                    movingPiece.col+1!=7 -> {
+                    movingPiece.col-1<=6
+            -> {
                 if(!futureMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row-1)){
-                    futureMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row-1)
+                    if(!futureMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row-1)){
+                        return false
+                    }
                 }
                 return true
             }
-
-
+            pieceAt(movingPiece.col+1, movingPiece.row+1)!=null
+                    &&
+                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.color!=DraughtColor.BLACK
+                    &&
+                    movingPiece.col+1<=6
+            -> {
+                if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row+1)){
+                    if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row+1)){
+                        return false
+                    }
+                }
+                return true
+            }
+            pieceAt(movingPiece.col-1, movingPiece.row+1)!=null
+                    &&
+                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.color!=DraughtColor.BLACK
+                    &&
+                    movingPiece.col-1<=6
+            -> {
+                if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col-1, movingPiece.row+1)){
+                    if(!futureBlackMove(movingPiece.col, movingPiece.row, movingPiece.col+1, movingPiece.row+1)){
+                        return false
+                    }
+                }
+                return true
+            }
             else -> {
                 return false
             }
+
         }
     }
 
@@ -221,6 +318,15 @@ class DraughtClass {
                 pieceBox.add(DraughtPiece(toCol + offCol, toRow + offRow, movingPiece.color, movingPiece.resId, DraughtRank.king)
                 )
                 Log.d(TAG, "KING")
+                if(offCol!=0 && offRow!=0 && toCol > 0 && toCol <=6 && toRow > 0 && toRow<=6 ){
+                    checkForFutureKingMove(DraughtPiece(
+                        toCol + offCol,
+                        toRow + offRow,
+                        movingPiece.color,
+                        movingPiece.resId,
+                        movingPiece.draughtRank
+                    ))
+                }
             }
             else -> {
                 pieceBox.add(
@@ -232,17 +338,18 @@ class DraughtClass {
                         DraughtRank.normal
                     )
                 )
+                if(offCol!=0 && offRow!=0 && toCol > 0 && toCol <=6 && toRow > 0 && toRow<=6 ){
+                    checkForFutureMove(DraughtPiece(
+                        toCol + offCol,
+                        toRow + offRow,
+                        movingPiece.color,
+                        movingPiece.resId,
+                        movingPiece.draughtRank
+                    ))
+                }
             }
         }
-        if(offCol!=0 && offRow!=0){
-            checkForFutureMove(toRow, offRow, toCol, offCol,  DraughtPiece(
-                toCol + offCol,
-                toRow + offRow,
-                movingPiece.color,
-                movingPiece.resId,
-                movingPiece.draughtRank
-            ))
-        }
+
 
     }
     private fun getBlackPlayer(
@@ -276,6 +383,15 @@ class DraughtClass {
                     )
                 )
                 Log.d(TAG, "KING")
+                if(offCol!=0 && offRow!=0 && toCol > 0 && toCol <= 6 && toRow > 0 && toRow<=6){
+                    checkForBlackKingFutureMove(DraughtPiece(
+                        toCol + offCol,
+                        toRow + offRow,
+                        movingPiece.color,
+                        movingPiece.resId,
+                        movingPiece.draughtRank
+                    ))
+                }
             }
             else -> {
                 pieceBox.add(
@@ -287,18 +403,20 @@ class DraughtClass {
                         DraughtRank.normal
                     )
                 )
+
+                if(offCol!=0 && offRow!=0 && toCol > 0 && toCol <= 6 && toRow > 0 && toRow<=6){
+                    checkForBlackFutureMove(DraughtPiece(
+                        toCol + offCol,
+                        toRow + offRow,
+                        movingPiece.color,
+                        movingPiece.resId,
+                        movingPiece.draughtRank
+                    ))
+                }
             }
         }
 
-        if(offCol!=0 && offRow!=0){
-            checkForBlackFutureMove(toRow, offRow, toCol, offCol,  DraughtPiece(
-                toCol + offCol,
-                toRow + offRow,
-                movingPiece.color,
-                movingPiece.resId,
-                movingPiece.draughtRank
-            ))
-        }
+
 
     }
 
@@ -335,8 +453,7 @@ class DraughtClass {
                 offCol=-1
             }
 
-
-            if( tempObject !=null) return false
+            if( tempObject !=null && offCol!=0 && offRow!=0 || toCol==0 || toRow==7) return false
 
             pieceBox.remove(it)
         }
@@ -387,7 +504,7 @@ class DraughtClass {
                 offCol=-1
             }
 
-            if( tempObject !=null) return false
+            if( tempObject !=null && offCol!=0 && offRow!=0 || toCol==0 || toRow==7) return false
             pieceBox.remove(it)
         }
         pieceBox.remove(movingPiece)
@@ -412,10 +529,12 @@ class DraughtClass {
         var offRow = 0
         var offCol=  0
         var tempObject: DraughtPiece? =null
-        var draughtPiece = pieceAt(toCol, toRow)?.let {
+        var draughtPiece: Unit? = pieceAt(toCol, toRow)?.let {
+
             if (it.color == movingPiece.color) {
                 return false
             }
+
 
             if(it.row >  movingPiece.row){
                 return false
@@ -425,30 +544,39 @@ class DraughtClass {
                 tempObject =  pieceAt(movingPiece.col +2, movingPiece.row-2)
                 offRow=-1
                 offCol=1
-            }
-            else if(fromCol > toCol){
+            } else if(fromCol > toCol){
                 tempObject =  pieceAt(movingPiece.col -2, movingPiece.row-2)
                 offRow=-1
                 offCol=-1
             }
 
 
-            if( tempObject !=null ) return false
-            pieceBox.remove(it)
-        }
-        pieceBox.remove(movingPiece)
+            if( tempObject !=null && offCol!=0 && offRow!=0 || toCol==0  || toRow==7) return false
+            //pieceBox.remove(it)
+        } ?: return false
 
-        if (toRow+offRow==0){
-            pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
-            return true
-        }
-        else if(movingPiece.draughtRank==DraughtRank.king){
-            pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
-            return true
-        }
-        else{
-            pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.normal))
-            return true
+        //pieceBox.remove(movingPiece)
+
+
+        return when {
+            toRow+offRow==0 -> {
+                myBox.add(movingPiece)
+                myBox.add(DraughtPiece(toCol, toRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
+                //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
+                true
+            }
+            movingPiece.draughtRank==DraughtRank.king -> {
+                myBox.add(movingPiece)
+                myBox.add(DraughtPiece(toCol, toRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
+                //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
+                true
+            }
+            else -> {
+                myBox.add(movingPiece)
+                myBox.add(DraughtPiece(toCol, toRow, movingPiece.color, movingPiece.resId, DraughtRank.normal))
+                //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.normal))
+                true
+            }
         }
 
     }
@@ -458,7 +586,8 @@ class DraughtClass {
         var offRow = 0
         var offCol=  0
         var tempObject: DraughtPiece? =null
-        var draughtPiece = pieceAt(toCol, toRow)?.let {
+        var draughtPiece: Unit? = pieceAt(toCol, toRow)?.let {
+            if (it==null) return false
             if (it.color == movingPiece.color) {
                 return false
             }
@@ -470,31 +599,38 @@ class DraughtClass {
                 tempObject =  pieceAt(movingPiece.col -2, movingPiece.row+2)
                 offRow=1
                 offCol=-1
-            }
-            else if(fromCol < toCol){
+            } else if(fromCol < toCol){
                 tempObject =  pieceAt(movingPiece.col +2, movingPiece.row+2)
                 offRow=1
                 offCol=1
             }
 
+            if( tempObject !=null && offCol!=0 && offRow!=0 || toCol==0  || toRow==7) return false
+            // pieceBox.remove(it)
+        } ?: return false
 
-            if( tempObject !=null ) return false
-            pieceBox.remove(it)
-        }
-        pieceBox.remove(movingPiece)
+        //pieceBox.remove(movingPiece)
 
-        if(toRow+offRow==7){
-            pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
-            return true
-        }
-        else if(movingPiece.draughtRank==DraughtRank.king){
-            pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
-            return true
-        }
-        else{
-            pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.normal))
-            return true
+        return when {
+            toRow+offRow==7 -> {
+                myBox.add(movingPiece)
+                myBox.add(DraughtPiece(toCol, toRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
+                //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
+                true
+            }
+            movingPiece.draughtRank==DraughtRank.king -> {
+                myBox.add(movingPiece)
+                myBox.add(DraughtPiece(toCol, toRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
+                //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
+                true
+            }
+            else -> {
+                myBox.add(movingPiece)
+                myBox.add(DraughtPiece(toCol, toRow, movingPiece.color, movingPiece.resId, DraughtRank.normal))
+                //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.normal))
+                true
 
+            }
         }
 
 
@@ -572,6 +708,38 @@ class DraughtClass {
         }
         return null
     }
+
+    fun setFutureMove(): ArrayList<DraughtPiece> {
+        return myBox
+    }
+
+    fun clearFutureMove(){
+        myBox.removeAll(myBox)
+    }
+
+    fun playOne(): Int {
+        var count=0
+        pieceBox.forEach { piece ->
+            if(piece.color == DraughtColor.BLACK){
+                count++
+            }
+
+        }
+        return count
+    }
+
+    fun playTwo(): Int{
+        var count=0
+        pieceBox.forEach { piece ->
+            if(piece.color == DraughtColor.RED){
+                count++
+            }
+        }
+        return count
+    }
+
+
+
 
 
     fun showBoard(): String{
