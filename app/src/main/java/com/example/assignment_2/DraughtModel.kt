@@ -665,8 +665,8 @@ class DraughtModel {
             return true
         }
         return false
-
     }
+
 
     fun reset(){
         pieceBox.removeAll(pieceBox)

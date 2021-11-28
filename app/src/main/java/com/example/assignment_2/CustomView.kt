@@ -3,6 +3,7 @@ package com.example.assignment_2
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Color.parseColor
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
@@ -13,11 +14,11 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
     // private fields of the class
     private var _context: Context? = context
     private var _attribs: AttributeSet? = null
-    private lateinit var _white: Paint
+    private lateinit var _boardColorTwo: Paint
     var draughtService: DraughtService? = null
-    private lateinit var _green: Paint
-    private lateinit var _black: Paint
-    private lateinit var _red: Paint
+    private lateinit var _boardColorOne: Paint
+    private lateinit var _playerOneColor: Paint
+    private lateinit var _playerTwoColor: Paint
     private lateinit var paint: Paint
     private var playerList: ArrayList<DraughtPiece> = ArrayList()
     private var canvas_width: Int = 0
@@ -31,20 +32,18 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
     private var fromRow:Int = -1
     private var futureMoveOne=false
     private var futureMoveTwo=false
-    private var playerOneTotalNumber=12
-    private var playerTwoTotalNumber=12
-    private var mainActivity:MainActivity= MainActivity()
+    private var _canvas: Canvas? = null
 
 
     init {
-        _green = Paint(Paint.ANTI_ALIAS_FLAG)
-        _white = Paint(Paint.ANTI_ALIAS_FLAG)
-        _black = Paint(Paint.ANTI_ALIAS_FLAG)
-        _red = Paint(Paint.ANTI_ALIAS_FLAG)
-        _green.color = Color.argb(255, 0, 255, 0)
-        _white.setColor(Color.argb(255, 217, 219, 218))
-        _black.setColor(Color.argb(255, 17, 18, 17))
-        _red.setColor(Color.RED)
+        _boardColorOne = Paint(Paint.ANTI_ALIAS_FLAG)
+        _boardColorTwo = Paint(Paint.ANTI_ALIAS_FLAG)
+        _playerOneColor = Paint(Paint.ANTI_ALIAS_FLAG)
+        _playerTwoColor = Paint(Paint.ANTI_ALIAS_FLAG)
+        _boardColorOne.color = Color.argb(255, 0, 255, 0)
+        _boardColorTwo.color = Color.argb(255, 217, 219, 218)
+        _playerOneColor.color = Color.argb(255, 17, 18, 17)
+        _playerTwoColor.color =  Color.RED
         paint = Paint()
     }
 
@@ -58,8 +57,9 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
         recWidth = canvas_width / 8.0f
         len = (canvas_width / 8.0f) / 2f
         radius = (canvas_width / 8.0f) / 4f
-        drawBoard(canvas)
-        drawPieces(canvas)
+        _canvas= canvas
+        drawBoard()
+        drawPieces()
 
     }
 
@@ -87,10 +87,10 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
         return true
     }
 
-    private fun drawBoard(canvas: Canvas?) {
+    private fun drawBoard() {
         for (i in 0..7) {
             for (j in 0..7) {
-                drawSquareAt(canvas, i, j, (i + j) % 2 != 1)
+                drawSquareAt(_canvas, i, j, (i + j) % 2 != 1)
             }
         }
     }
@@ -109,20 +109,20 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
     }
 
 
-    private fun drawPieces(canvas: Canvas?) {
+    private fun drawPieces() {
         for (row in 7 downTo 0) {
             for (col in 7 downTo 0) {
                 var piece = draughtService?.pieceAt(col, row)
                 if (piece != null && piece.player == DraughtPlayers.PLAYER2 && piece.draughtRank==DraughtRank.NORMAL) {
-                    drawPlayer1(canvas, row, col, _red)
+                    drawPlayer1(_canvas, row, col, _playerTwoColor)
                 } else if (piece != null && piece.player == DraughtPlayers.PLAYER1 && piece.draughtRank==DraughtRank.NORMAL) {
-                    drawPlayer1(canvas, row, col, _black)
+                    drawPlayer1(_canvas, row, col, _playerOneColor)
                 }
                 else if(piece != null && piece.player == DraughtPlayers.PLAYER2 && piece.draughtRank==DraughtRank.KING){
-                    drawPlayer2(canvas, row, col, _red)
+                    drawPlayer2(_canvas, row, col, _playerTwoColor)
                 }
                 else if(piece != null && piece.player == DraughtPlayers.PLAYER1 && piece.draughtRank==DraughtRank.KING){
-                    drawPlayer2(canvas, row, col, _black)
+                    drawPlayer2(_canvas, row, col, _playerOneColor)
                 }
             }
         }
@@ -132,7 +132,7 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
     }
 
     private fun drawSquareAt(canvas: Canvas?, row: Int, col: Int, isGreen: Boolean) {
-        paint = if (!isGreen) _green else _white
+        paint = if (!isGreen) _boardColorOne else _boardColorTwo
         canvas?.drawRect(
             row * canvas_width / 8.0f,
             col * canvas_height / 8.0f,
@@ -326,6 +326,44 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
     }
 
 
+    fun updateBoardColor(retrievedColor: RetrievedColor){
+        for(element in  basicColors()){
+            if(element.name ==retrievedColor.playerOneColor) _playerOneColor.color = parseColor(element.hex)
+            if(element.name ==retrievedColor.playerTwoColor) _playerTwoColor.color = parseColor(element.hex)
+            if(element.name ==retrievedColor.boardColorOne)  _boardColorOne.color = parseColor(element.hex)
+            if(element.name ==retrievedColor.boardColorTwo) _boardColorTwo.color = parseColor(element.hex)
+
+        }
+        invalidate()
+    }
+
+    fun reset(){
+        playerOneCounter=true
+        playerTwoCounter=false
+        futureMoveOne=false
+        futureMoveTwo=false
+    }
+
+    private fun basicColors(): List<ColorObject>
+    {
+        return listOf(
+            ColorObject("Black", "#010b13"),
+            ColorObject("Silver", "#C0C0C0"),
+            ColorObject("Gray", "#808080"),
+            ColorObject("Maroon", "#800000"),
+            ColorObject("Red", "#FF0000"),
+            ColorObject("Fuchsia", "#FF00FF"),
+            ColorObject("Green", "#008000"),
+            ColorObject("Lime", "#00FF00"),
+            ColorObject("Olive", "#808000"),
+            ColorObject("Yellow", "#FFFF00"),
+            ColorObject("Navy", "#000080"),
+            ColorObject("Blue", "#0000FF"),
+            ColorObject("Teal", "#008080"),
+            ColorObject("Aqua", "#00FFFF")
+        )
+
+    }
 
 
 }

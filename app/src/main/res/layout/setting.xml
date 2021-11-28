@@ -44,11 +44,12 @@
             android:layout_height="wrap_content"
             android:text="PlayerOne"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginEnd="75dp"
             android:textSize="20dp"
             />
 
-        <TextView
+
+        <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/playerOneColor"
@@ -56,6 +57,7 @@
             android:gravity="center"
             android:textSize="20dp"
             />
+
 
     </LinearLayout>
 
@@ -71,11 +73,11 @@
             android:layout_height="wrap_content"
             android:text="PlayerTwo"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginEnd="75dp"
             android:textSize="20dp"
             />
 
-        <TextView
+        <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/playerTwoColor"
@@ -96,20 +98,49 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Board Color"
+            android:text="Board ColorOne"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="25dp"
             android:textSize="20dp"
             />
 
-        <TextView
+        <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/boardColor"
+            android:id="@+id/boardColor1"
             android:text="value"
             android:gravity="center"
             android:textSize="20dp"
             />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Board ColorTwo"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="25dp"
+            android:textSize="20dp"
+            />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/boardColor2"
+            android:text="value"
+            android:gravity="center"
+            android:textSize="20dp"
+            />
+
 
     </LinearLayout>
 
@@ -130,15 +161,6 @@
             android:textColor="@color/black"
             />
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/cancelBtn"
-            android:text="Cancel"
-            android:layout_marginRight="5dp"
-            android:textColor="@color/black"
-            />
 
     </LinearLayout>
 

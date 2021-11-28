@@ -40,28 +40,6 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:layout_below="@+id/player1_container"
-        >
-
-        <TextView
-            android:id="@+id/playerMove"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="value"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:padding="10dp"
-            />
-    </LinearLayout>
-
-
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -70,6 +48,7 @@
         android:layout_toRightOf="@+id/player1_container"
         android:layout_marginLeft="170dp"
         android:layout_gravity="end"
+
         >
 
         <TextView
@@ -95,14 +74,47 @@
             />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/player1_container"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:id="@+id/myLine"
+        android:padding="5dp"
+        android:background="@drawable/back"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="Current Player:"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/playerMove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="value"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
 
     <com.example.assignment_2.CustomView
         android:id="@+id/draught_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:layout_margin="5dp"
-        />
+        android:layout_below="@+id/myLine"
+        android:layout_margin="10dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -117,14 +129,14 @@
             android:layout_height="wrap_content"
             android:text="RESET GAME"
             android:layout_marginRight="10dp"
-
+            android:textColor="@color/black"
             />
         <Button
             android:id="@+id/settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="GAME SETTING"
-
+            android:textColor="@color/black"
             />
     </LinearLayout>
 

@@ -43,11 +43,17 @@ class MainActivity : AppCompatActivity(), DraughtService {
         reset?.setOnClickListener{
             draughtModel.reset()
             draughtView.invalidate()
+            draughtView.reset()
             setPlayerScores()
+            isTrue=false
+            previousPlayOne=false
+            previousPlayTwo=false
+            currentPlayerMovement()
         }
-        settingButton?.setOnClickListener { startSettingActivity() }
         setPlayerScores()
         currentPlayerMovement()
+
+        settingButton?.setOnClickListener { startSettingActivity()}
 
 
     }
@@ -59,7 +65,7 @@ class MainActivity : AppCompatActivity(), DraughtService {
     override fun playerTwoMove(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Int {
         if(draughtModel.movePiece(fromCol, fromRow, toCol, toRow)){
             val draughtView = findViewById<CustomView>(R.id.draught_view)
-            draughtView.invalidate()
+            draughtView?.invalidate()
             isTrue=false
             currentPlayerMovement()
             setPlayerScores()
@@ -72,7 +78,7 @@ class MainActivity : AppCompatActivity(), DraughtService {
     override fun playerOneMove(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Int {
         if(draughtModel.moveBlackPiece(fromCol, fromRow, toCol, toRow)){
             val draughtView = findViewById<CustomView>(R.id.draught_view)
-            draughtView.invalidate()
+            draughtView?.invalidate()
             isTrue=true
             currentPlayerMovement()
             setPlayerScores()
@@ -90,7 +96,7 @@ class MainActivity : AppCompatActivity(), DraughtService {
     override fun playerTwoKingMove(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Int {
         if(draughtModel.moveKing(fromCol, fromRow, toCol, toRow)){
             val draughtView = findViewById<CustomView>(R.id.draught_view)
-            draughtView.invalidate()
+            draughtView?.invalidate()
             isTrue=false
             currentPlayerMovement()
             setPlayerScores()
@@ -102,7 +108,7 @@ class MainActivity : AppCompatActivity(), DraughtService {
     override fun playerOneKingMove(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int): Int {
         if(draughtModel.moveBlackKing(fromCol, fromRow, toCol, toRow)){
             val draughtView = findViewById<CustomView>(R.id.draught_view)
-            draughtView.invalidate()
+            draughtView?.invalidate()
             isTrue=true
             currentPlayerMovement()
             setPlayerScores()
@@ -130,7 +136,7 @@ class MainActivity : AppCompatActivity(), DraughtService {
 
     private fun startSettingActivity(){
         var intent: Intent = Intent(this, Setting::class.java)
-        startActivity(intent)
+        startActivityForResult(intent, 16)
     }
 
     private fun currentPlayerMovement(){
@@ -158,6 +164,24 @@ class MainActivity : AppCompatActivity(), DraughtService {
         }
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        if(requestCode == 16 && resultCode == RESULT_OK){
+            var retrieveColor: RetrievedColor? = data?.getSerializableExtra("retrievedColor") as RetrievedColor?
+            Log.d("TAG", retrieveColor?.playerOneColor.toString())
+            updateBoard(retrieveColor)
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun updateBoard(retrieveColor: RetrievedColor?) {
+        val draughtView = findViewById<CustomView>(R.id.draught_view)
+        if (retrieveColor != null) {
+            draughtView.updateBoardColor(retrieveColor)
+        }
+    }
 
 
 }
