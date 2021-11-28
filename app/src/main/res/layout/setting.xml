@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/wood"
-    tools:context=".SettingActivity"
+    tools:context=".controller.SettingActivity"
     >
 
     <TextView
@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
+        android:background="@drawable/back"
         >
 
         <TextView
@@ -66,6 +67,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
+        android:background="@drawable/back"
         >
 
         <TextView
@@ -93,6 +95,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
+        android:background="@drawable/back"
         >
 
         <TextView
@@ -121,6 +124,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
+        android:background="@drawable/back"
         >
 
         <TextView

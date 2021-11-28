@@ -1,4 +1,4 @@
-package com.example.assignment_2
+package com.example.assignment_2.model
 
 import android.util.Log
 
@@ -49,7 +49,7 @@ class DraughtModel {
             return true
         }
 
-        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.player!=DraughtPlayers.PLAYER2){
+        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.player!= DraughtPlayers.PLAYER2){
             getTypePlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
 
@@ -95,7 +95,7 @@ class DraughtModel {
             return true
         }
 
-        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.player!=DraughtPlayers.PLAYER2){
+        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.player!= DraughtPlayers.PLAYER2){
             getBlackPlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
         }
@@ -107,7 +107,7 @@ class DraughtModel {
     private fun checkForFutureMove(movingPiece: DraughtPiece):Boolean{
         when {
             pieceAt(movingPiece.col+1, movingPiece.row-1)!=null &&
-                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.player!=DraughtPlayers.PLAYER2
+                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.player!= DraughtPlayers.PLAYER2
                     &&
                     movingPiece.col+1<=6
             -> {
@@ -120,7 +120,7 @@ class DraughtModel {
             }
             pieceAt(movingPiece.col-1, movingPiece.row-1)!=null
                     &&
-                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.player!=DraughtPlayers.PLAYER2
+                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.player!= DraughtPlayers.PLAYER2
                     &&
                     movingPiece.col-1<=6
                      -> {
@@ -145,7 +145,7 @@ class DraughtModel {
         when {
             pieceAt(movingPiece.col+1, movingPiece.row+1)!=null
                     &&
-                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.player!=DraughtPlayers.PLAYER1
+                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.player!= DraughtPlayers.PLAYER1
                     &&
                     movingPiece.col+1<=6
             -> {
@@ -158,7 +158,7 @@ class DraughtModel {
             }
             pieceAt(movingPiece.col-1, movingPiece.row+1)!=null
                     &&
-                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.player!=DraughtPlayers.PLAYER1
+                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.player!= DraughtPlayers.PLAYER1
                     &&
                     movingPiece.col-1<=6
             -> {
@@ -181,9 +181,9 @@ class DraughtModel {
         when{
             pieceAt(movingPiece.col+1, movingPiece.row+1)!=null
                     &&
-                    movingPiece.draughtRank==DraughtRank.KING
+                    movingPiece.draughtRank== DraughtRank.KING
                     &&
-                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.player!=DraughtPlayers.PLAYER2
+                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.player!= DraughtPlayers.PLAYER2
                     &&
                     movingPiece.col+1<=6
             -> {
@@ -196,9 +196,9 @@ class DraughtModel {
             }
             pieceAt(movingPiece.col-1, movingPiece.row+1)!=null
                     &&
-                    movingPiece.draughtRank==DraughtRank.KING
+                    movingPiece.draughtRank== DraughtRank.KING
                     &&
-                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.player!=DraughtPlayers.PLAYER2
+                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.player!= DraughtPlayers.PLAYER2
                     &&
                     movingPiece.col-1<=6
             -> {
@@ -210,7 +210,7 @@ class DraughtModel {
                 return true
             }
             pieceAt(movingPiece.col+1, movingPiece.row-1)!=null &&
-                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.player!=DraughtPlayers.PLAYER2
+                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.player!= DraughtPlayers.PLAYER2
                     &&
                     movingPiece.col+1<=6
             -> {
@@ -223,7 +223,7 @@ class DraughtModel {
             }
             pieceAt(movingPiece.col-1, movingPiece.row-1)!=null
                     &&
-                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.player!=DraughtPlayers.PLAYER2
+                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.player!= DraughtPlayers.PLAYER2
                     &&
                     movingPiece.col-1<=6
             -> {
@@ -245,9 +245,9 @@ class DraughtModel {
     private fun checkForBlackKingFutureMove(movingPiece: DraughtPiece):Boolean{
         when{
             pieceAt(movingPiece.col+1, movingPiece.row-1)!=null &&
-                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.player!=DraughtPlayers.PLAYER1
+                    pieceAt(movingPiece.col+1, movingPiece.row-1)!!.player!= DraughtPlayers.PLAYER1
                     &&
-                    movingPiece.draughtRank==DraughtRank.KING
+                    movingPiece.draughtRank== DraughtRank.KING
                     &&
                     movingPiece.col+1<=6
             -> {
@@ -260,9 +260,9 @@ class DraughtModel {
             }
             pieceAt(movingPiece.col-1, movingPiece.row-1)!=null
                     &&
-                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.player!=DraughtPlayers.PLAYER1
+                    pieceAt(movingPiece.col-1, movingPiece.row-1)!!.player!= DraughtPlayers.PLAYER1
                     &&
-                    movingPiece.draughtRank==DraughtRank.KING
+                    movingPiece.draughtRank== DraughtRank.KING
                     &&
                     movingPiece.col-1<=6
             -> {
@@ -275,7 +275,7 @@ class DraughtModel {
             }
             pieceAt(movingPiece.col+1, movingPiece.row+1)!=null
                     &&
-                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.player!=DraughtPlayers.PLAYER1
+                    pieceAt(movingPiece.col+1, movingPiece.row+1)?.player!= DraughtPlayers.PLAYER1
                     &&
                     movingPiece.col+1<=6
             -> {
@@ -288,7 +288,7 @@ class DraughtModel {
             }
             pieceAt(movingPiece.col-1, movingPiece.row+1)!=null
                     &&
-                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.player!=DraughtPlayers.PLAYER1
+                    pieceAt(movingPiece.col-1, movingPiece.row+1)?.player!= DraughtPlayers.PLAYER1
                     &&
                     movingPiece.col-1<=6
             -> {
@@ -310,22 +310,24 @@ class DraughtModel {
 
         when {
             toRow + offRow == 0 -> {
-                pieceBox.add(DraughtPiece(toCol + offCol, toRow + offRow, movingPiece.player, movingPiece.resId, DraughtRank.KING)
+                pieceBox.add(
+                    DraughtPiece(toCol + offCol, toRow + offRow, movingPiece.player, movingPiece.resId, DraughtRank.KING)
                 )
-                Log.d(TAG, "KING")
             }
-            movingPiece.draughtRank==DraughtRank.KING -> {
-                pieceBox.add(DraughtPiece(toCol + offCol, toRow + offRow, movingPiece.player, movingPiece.resId, DraughtRank.KING)
+            movingPiece.draughtRank== DraughtRank.KING -> {
+                pieceBox.add(
+                    DraughtPiece(toCol + offCol, toRow + offRow, movingPiece.player, movingPiece.resId, DraughtRank.KING)
                 )
-                Log.d(TAG, "KING")
                 if(offCol!=0 && offRow!=0 && toCol > 0 && toCol <=6 && toRow > 0 && toRow<=6 ){
-                    checkForFutureKingMove(DraughtPiece(
+                    checkForFutureKingMove(
+                        DraughtPiece(
                         toCol + offCol,
                         toRow + offRow,
                         movingPiece.player,
                         movingPiece.resId,
                         movingPiece.draughtRank
-                    ))
+                    )
+                    )
                 }
             }
             else -> {
@@ -339,13 +341,15 @@ class DraughtModel {
                     )
                 )
                 if(offCol!=0 && offRow!=0 && toCol > 0 && toCol <=6 && toRow > 0 && toRow<=6 ){
-                    checkForFutureMove(DraughtPiece(
+                    checkForFutureMove(
+                        DraughtPiece(
                         toCol + offCol,
                         toRow + offRow,
                         movingPiece.player,
                         movingPiece.resId,
                         movingPiece.draughtRank
-                    ))
+                    )
+                    )
                 }
             }
         }
@@ -370,9 +374,8 @@ class DraughtModel {
                         DraughtRank.KING
                     )
                 )
-                Log.d(TAG, "KING")
             }
-            movingPiece.draughtRank==DraughtRank.KING -> {
+            movingPiece.draughtRank== DraughtRank.KING -> {
                 pieceBox.add(
                     DraughtPiece(
                         toCol + offCol,
@@ -382,15 +385,16 @@ class DraughtModel {
                         DraughtRank.KING
                     )
                 )
-                Log.d(TAG, "KING")
                 if(offCol!=0 && offRow!=0 && toCol > 0 && toCol <= 6 && toRow > 0 && toRow<=6){
-                    checkForBlackKingFutureMove(DraughtPiece(
+                    checkForBlackKingFutureMove(
+                        DraughtPiece(
                         toCol + offCol,
                         toRow + offRow,
                         movingPiece.player,
                         movingPiece.resId,
                         movingPiece.draughtRank
-                    ))
+                    )
+                    )
                 }
             }
             else -> {
@@ -405,13 +409,15 @@ class DraughtModel {
                 )
 
                 if(offCol!=0 && offRow!=0 && toCol > 0 && toCol <= 6 && toRow > 0 && toRow<=6){
-                    checkForBlackFutureMove(DraughtPiece(
+                    checkForBlackFutureMove(
+                        DraughtPiece(
                         toCol + offCol,
                         toRow + offRow,
                         movingPiece.player,
                         movingPiece.resId,
                         movingPiece.draughtRank
-                    ))
+                    )
+                    )
                 }
             }
         }
@@ -465,7 +471,7 @@ class DraughtModel {
             getTypePlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
         }
-        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.player!=DraughtPlayers.PLAYER2){
+        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.player!= DraughtPlayers.PLAYER2){
             getTypePlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
         }
@@ -516,7 +522,7 @@ class DraughtModel {
             getBlackPlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
         }
-        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.player!=DraughtPlayers.PLAYER2){
+        else if(pieceAt(mainPiece.col, mainPiece.row)!=null && pieceAt(mainPiece.col, mainPiece.row)!!.player!= DraughtPlayers.PLAYER2){
             getBlackPlayer(toRow, offRow, toCol, offCol, movingPiece)
             return true
 
@@ -563,7 +569,7 @@ class DraughtModel {
                 myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.KING))
                 true
             }
-            movingPiece.draughtRank==DraughtRank.KING -> {
+            movingPiece.draughtRank== DraughtRank.KING -> {
                 myBox.add(movingPiece)
                 myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.KING))
                 true
@@ -612,7 +618,7 @@ class DraughtModel {
                 myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.KING))
                 true
             }
-            movingPiece.draughtRank==DraughtRank.KING -> {
+            movingPiece.draughtRank== DraughtRank.KING -> {
                 myBox.add(movingPiece)
                 myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.KING))
                 true

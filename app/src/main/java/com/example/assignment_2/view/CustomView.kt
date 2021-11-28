@@ -1,4 +1,4 @@
-package com.example.assignment_2
+package com.example.assignment_2.view
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,9 +6,14 @@ import android.graphics.Color
 import android.graphics.Color.parseColor
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import com.example.assignment_2.service.DraughtService
+import com.example.assignment_2.model.RetrievedColor
+import com.example.assignment_2.model.ColorObject
+import com.example.assignment_2.model.DraughtPiece
+import com.example.assignment_2.model.DraughtPlayers
+import com.example.assignment_2.model.DraughtRank
 
 class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attribs) {
     // private fields of the class
@@ -111,15 +116,15 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
         for (row in 7 downTo 0) {
             for (col in 7 downTo 0) {
                 var piece = draughtService?.pieceAt(col, row)
-                if (piece != null && piece.player == DraughtPlayers.PLAYER2 && piece.draughtRank==DraughtRank.NORMAL) {
+                if (piece != null && piece.player == DraughtPlayers.PLAYER2 && piece.draughtRank== DraughtRank.NORMAL) {
                     drawPlayer1(_canvas, row, col, _playerTwoColor)
-                } else if (piece != null && piece.player == DraughtPlayers.PLAYER1 && piece.draughtRank==DraughtRank.NORMAL) {
+                } else if (piece != null && piece.player == DraughtPlayers.PLAYER1 && piece.draughtRank== DraughtRank.NORMAL) {
                     drawPlayer1(_canvas, row, col, _playerOneColor)
                 }
-                else if(piece != null && piece.player == DraughtPlayers.PLAYER2 && piece.draughtRank==DraughtRank.KING){
+                else if(piece != null && piece.player == DraughtPlayers.PLAYER2 && piece.draughtRank== DraughtRank.KING){
                     drawPlayer2(_canvas, row, col, _playerTwoColor)
                 }
-                else if(piece != null && piece.player == DraughtPlayers.PLAYER1 && piece.draughtRank==DraughtRank.KING){
+                else if(piece != null && piece.player == DraughtPlayers.PLAYER1 && piece.draughtRank== DraughtRank.KING){
                     drawPlayer2(_canvas, row, col, _playerOneColor)
                 }
             }
@@ -160,7 +165,7 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
             if(fromRow==7 && draughtService?.pieceAt(col, row)==null){
                 playerOneKingController(fromCol, fromRow, col, row)
             }
-            else if(draughtService?.pieceAt(fromCol, fromRow)?.draughtRank==DraughtRank.KING){
+            else if(draughtService?.pieceAt(fromCol, fromRow)?.draughtRank== DraughtRank.KING){
                 playerOneKingController(fromCol, fromRow, col, row)
             }
             else{
@@ -172,7 +177,7 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
             if(row==0 && draughtService?.pieceAt(col, row)==null){
                 playerTwoKingController(fromCol, fromRow, col, row)
             }
-            else if(draughtService?.pieceAt(fromCol, fromRow)?.draughtRank==DraughtRank.KING){
+            else if(draughtService?.pieceAt(fromCol, fromRow)?.draughtRank== DraughtRank.KING){
                 playerTwoKingController(fromCol, fromRow, col, row)
             }
             else{
@@ -317,7 +322,7 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
     private fun findPlayer(fromCol: Int, fromRow: Int):Int{
         var draughtPiece = draughtService?.pieceAt(fromCol, fromRow)
         draughtPiece?:return -1
-        if(draughtPiece!!.player==DraughtPlayers.PLAYER1){
+        if(draughtPiece!!.player== DraughtPlayers.PLAYER1){
             return 0
         }
         return 1

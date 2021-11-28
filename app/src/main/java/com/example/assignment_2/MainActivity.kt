@@ -3,9 +3,14 @@ package com.example.assignment_2
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import com.example.assignment_2.controller.SettingActivity
+import com.example.assignment_2.model.DraughtModel
+import com.example.assignment_2.model.DraughtPiece
+import com.example.assignment_2.model.RetrievedColor
+import com.example.assignment_2.service.DraughtService
+import com.example.assignment_2.view.CustomView
 
 
 class MainActivity : AppCompatActivity(), DraughtService {
@@ -168,22 +173,30 @@ class MainActivity : AppCompatActivity(), DraughtService {
             currentPlayer?.text = "PlayerOne"
             previousPlayOne=true
             previousPlayTwo=false
+            //redSecondCaption
+            //redNormalMove
         }
         else if(isTrue && previousPlayOne && setFutureMove().size==2){
             currentPlayer?.text = "PlayerOne"
             previousPlayOne=false
             previousPlayTwo=false
+            //BlackFirstCaption
         }
         else if(isTrue && !previousPlayTwo && setFutureMove().size!=2){
             currentPlayer?.text = "PlayerTwo"
             previousPlayTwo=true
             previousPlayOne=false
+            //blackNormalMove
 
         }
         else if(!isTrue && previousPlayTwo && setFutureMove().size==2){
             currentPlayer?.text = "PlayerTwo"
             previousPlayTwo=false
             previousPlayOne=false
+            //redFirstCaption
+        }
+        else{
+            currentPlayer?.text = "PlayerTwo"
         }
 
     }

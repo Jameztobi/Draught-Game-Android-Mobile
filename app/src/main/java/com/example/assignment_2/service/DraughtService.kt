@@ -1,4 +1,6 @@
-package com.example.assignment_2
+package com.example.assignment_2.service
+
+import com.example.assignment_2.model.DraughtPiece
 
 interface DraughtService {
     fun pieceAt(col: Int, row: Int)  : DraughtPiece?

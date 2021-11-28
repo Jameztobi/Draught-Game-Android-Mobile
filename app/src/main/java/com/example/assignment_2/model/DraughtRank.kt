@@ -1,4 +1,4 @@
-package com.example.assignment_2
+package com.example.assignment_2.model
 
 enum class DraughtRank {
     NORMAL,

@@ -1,4 +1,4 @@
-package com.example.assignment_2
+package com.example.assignment_2.controller
 
 import android.graphics.Color
 import android.graphics.Paint
@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.assignment_2.R
+import com.example.assignment_2.model.ColorObject
+import com.example.assignment_2.model.RetrievedColor
 import android.content.Intent as Intent
 
 class SettingActivity : AppCompatActivity() {

@@ -109,7 +109,7 @@
     </LinearLayout>
 
 
-    <com.example.assignment_2.CustomView
+    <com.example.assignment_2.view.CustomView
         android:id="@+id/draught_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
