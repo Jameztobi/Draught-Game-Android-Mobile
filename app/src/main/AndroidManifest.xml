@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Setting" android:parentActivityName=".MainActivity">
+        <activity android:name=".SettingActivity" android:parentActivityName=".MainActivity">
 
         </activity>
     </application>

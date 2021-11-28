@@ -71,13 +71,11 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
                  fromRow = ((event.y)/ recWidth).toInt()
             }
             MotionEvent.ACTION_MOVE -> {
-                Log.d(TAG, "move")
             }
 
             MotionEvent.ACTION_UP -> {
                 val col = ((event.x)/ recWidth).toInt()
                 val row = ((event.y)/ recWidth).toInt()
-                Log.d(TAG, "from ( $fromRow,$fromCol) to ( $row, $col)")
                 gameController(fromCol, fromRow, col, row)
 
             }
@@ -360,7 +358,8 @@ class CustomView(context: Context?, attribs: AttributeSet?) : View(context, attr
             ColorObject("Navy", "#000080"),
             ColorObject("Blue", "#0000FF"),
             ColorObject("Teal", "#008080"),
-            ColorObject("Aqua", "#00FFFF")
+            ColorObject("Aqua", "#00FFFF"),
+            ColorObject("White", "#FFFFFF")
         )
 
     }

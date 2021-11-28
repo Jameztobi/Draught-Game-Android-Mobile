@@ -421,6 +421,7 @@ class DraughtModel {
     }
 
     fun moveKing(fromCol: Int, fromRow:Int, toCol:Int, toRow:Int):Boolean{
+        if(!correctKingMove(fromRow, fromCol, toRow, toCol)) return false
         var movingPiece = pieceAt(fromCol, fromRow) ?: return false
         var offRow = 0
         var offCol=  0
@@ -473,6 +474,7 @@ class DraughtModel {
     }
 
     fun moveBlackKing(fromCol: Int, fromRow:Int, toCol:Int, toRow:Int): Boolean{
+        if(!correctKingMove(fromRow, fromCol, toRow, toCol)) return false
         var offRow = 0
         var offCol=  0
         var tempObject: DraughtPiece? =null
@@ -550,31 +552,25 @@ class DraughtModel {
                 offCol=-1
             }
 
-
             if( tempObject !=null && offCol!=0 && offRow!=0 || toCol==0  || toRow==7) return false
-            //pieceBox.remove(it)
         } ?: return false
 
-        //pieceBox.remove(movingPiece)
 
 
         return when {
             toRow+offRow==0 -> {
                 myBox.add(movingPiece)
                 myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.KING))
-                //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
                 true
             }
             movingPiece.draughtRank==DraughtRank.KING -> {
                 myBox.add(movingPiece)
                 myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.KING))
-                //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
                 true
             }
             else -> {
                 myBox.add(movingPiece)
                 myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.NORMAL))
-                //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.normal))
                 true
             }
         }
@@ -606,28 +602,24 @@ class DraughtModel {
             }
 
             if( tempObject !=null && offCol!=0 && offRow!=0 || toCol==0  || toRow==7) return false
-            // pieceBox.remove(it)
+
         } ?: return false
 
-        //pieceBox.remove(movingPiece)
 
         return when {
             toRow+offRow==7 -> {
                 myBox.add(movingPiece)
                 myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.KING))
-                //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
                 true
             }
             movingPiece.draughtRank==DraughtRank.KING -> {
                 myBox.add(movingPiece)
                 myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.KING))
-                //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.king))
                 true
             }
             else -> {
                 myBox.add(movingPiece)
                 myBox.add(DraughtPiece(toCol, toRow, movingPiece.player, movingPiece.resId, DraughtRank.NORMAL))
-                //pieceBox.add(DraughtPiece(toCol+offCol, toRow+offRow, movingPiece.color, movingPiece.resId, DraughtRank.normal))
                 true
 
             }
@@ -666,6 +658,27 @@ class DraughtModel {
         }
         return false
     }
+
+
+    private fun correctKingMove(fromRow:Int, fromCol:Int, toRow:Int, toCol:Int): Boolean{
+        var offSetRow = fromRow-toRow
+        var addOptionCol1 = fromCol+1
+        var addOptionCol2 = fromCol-1
+
+        if (offSetRow==1 && addOptionCol1 == toCol){
+            return true
+        }
+        if (offSetRow==1 && addOptionCol2 == toCol)
+            return true
+        if (offSetRow==-1 && addOptionCol1 == toCol){
+            return true
+        }
+        if (offSetRow==-1 && addOptionCol2 == toCol){
+            return true
+        }
+        return false
+    }
+
 
 
     fun reset(){
@@ -738,38 +751,4 @@ class DraughtModel {
         return count
     }
 
-
-
-
-
-    fun showBoard(): String{
-        var board = " \n"
-        for(row in 7 downTo 0){
-            board +="$row"
-            for(col in 0..7){
-                val piece = pieceAt(col, row)
-                if(piece == null){
-                    board+= " ."
-                }
-                else{
-                    val red = piece.player == DraughtPlayers.PLAYER2
-                    val black = piece.player == DraughtPlayers.PLAYER1
-                    board +=" "
-
-                    if(red){
-                        board +="R"
-                    }
-                    else{
-                        board +="B"
-                    }
-
-                }
-
-            }
-
-            board+= "\n"
-        }
-        board += "  0 1 2 3 4 5 6 7"
-        return board
-    }
 }

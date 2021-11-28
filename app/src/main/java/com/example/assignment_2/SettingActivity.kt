@@ -8,7 +8,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent as Intent
 
-class Setting : AppCompatActivity() {
+class SettingActivity : AppCompatActivity() {
 
     private var playerOneColor: Spinner? = null
     private var playerTwoColor: Spinner? = null
@@ -156,7 +156,8 @@ class Setting : AppCompatActivity() {
             ColorObject("Navy", "000080"),
             ColorObject("Blue", "0000FF"),
             ColorObject("Teal", "008080"),
-            ColorObject("Aqua", "00FFFF")
+            ColorObject("Aqua", "00FFFF"),
+            ColorObject("White", "#FFFFFF")
         )
 
     }

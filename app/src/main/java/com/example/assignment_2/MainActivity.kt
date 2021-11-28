@@ -7,7 +7,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 
-const val TAG = "MainActivity"
+
 class MainActivity : AppCompatActivity(), DraughtService {
     private var draughtModel = DraughtModel()
     private var playerOneText: TextView? = null
@@ -20,6 +20,8 @@ class MainActivity : AppCompatActivity(), DraughtService {
     private var isTrue:Boolean=false
     private var previousPlayOne:Boolean=false
     private var previousPlayTwo:Boolean=false
+    private var playerTwoCount =0
+    private var playerOneCount =0
 
 
 
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity(), DraughtService {
         currentPlayer = findViewById(R.id.playerMove)
         reset = findViewById<Button>(R.id.reset)
         settingButton=findViewById<Button>(R.id.settings)
-        Log.d(TAG, "${draughtModel.showBoard()}")
+
 
         val draughtView = findViewById<CustomView>(R.id.draught_view)
         draughtView.draughtService = this
@@ -55,7 +57,6 @@ class MainActivity : AppCompatActivity(), DraughtService {
 
         settingButton?.setOnClickListener { startSettingActivity()}
 
-
     }
 
     override fun pieceAt(col: Int, row: Int): DraughtPiece? {
@@ -67,6 +68,8 @@ class MainActivity : AppCompatActivity(), DraughtService {
             val draughtView = findViewById<CustomView>(R.id.draught_view)
             draughtView?.invalidate()
             isTrue=false
+            playerTwoCount=0
+            playerOneCount=0
             currentPlayerMovement()
             setPlayerScores()
 
@@ -80,6 +83,8 @@ class MainActivity : AppCompatActivity(), DraughtService {
             val draughtView = findViewById<CustomView>(R.id.draught_view)
             draughtView?.invalidate()
             isTrue=true
+            playerTwoCount=0
+            playerOneCount=0
             currentPlayerMovement()
             setPlayerScores()
             return 0
@@ -98,6 +103,15 @@ class MainActivity : AppCompatActivity(), DraughtService {
             val draughtView = findViewById<CustomView>(R.id.draught_view)
             draughtView?.invalidate()
             isTrue=false
+            playerOneCount=0
+            if (playerTwoCount==1 && setFutureMove().size==2){
+                isTrue=true
+                previousPlayOne=true
+                0.also { playerTwoCount = it }
+            }
+            else{
+                playerTwoCount++
+            }
             currentPlayerMovement()
             setPlayerScores()
             return 0
@@ -110,8 +124,18 @@ class MainActivity : AppCompatActivity(), DraughtService {
             val draughtView = findViewById<CustomView>(R.id.draught_view)
             draughtView?.invalidate()
             isTrue=true
+            playerTwoCount=0
+            if (playerOneCount==1 && setFutureMove().size==2){
+                isTrue=false
+                previousPlayTwo=true
+                0.also { playerOneCount = it }
+            }
+            else{
+                playerOneCount++
+            }
             currentPlayerMovement()
             setPlayerScores()
+
             return 0
         }
         return -1
@@ -135,7 +159,7 @@ class MainActivity : AppCompatActivity(), DraughtService {
     }
 
     private fun startSettingActivity(){
-        var intent: Intent = Intent(this, Setting::class.java)
+        var intent: Intent = Intent(this, SettingActivity::class.java)
         startActivityForResult(intent, 16)
     }
 
@@ -160,8 +184,8 @@ class MainActivity : AppCompatActivity(), DraughtService {
             currentPlayer?.text = "PlayerTwo"
             previousPlayTwo=false
             previousPlayOne=false
-
         }
+
     }
 
 
@@ -169,7 +193,6 @@ class MainActivity : AppCompatActivity(), DraughtService {
 
         if(requestCode == 16 && resultCode == RESULT_OK){
             var retrieveColor: RetrievedColor? = data?.getSerializableExtra("retrievedColor") as RetrievedColor?
-            Log.d("TAG", retrieveColor?.playerOneColor.toString())
             updateBoard(retrieveColor)
         }
 
